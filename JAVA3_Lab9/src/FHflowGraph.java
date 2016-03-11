@@ -256,8 +256,38 @@ public class FHflowGraph<E>
       return null;   // should never happen
    }
    
+   /**
+    * Method contains main algorithm to find max flow
+    * @return         max flow
+    */
    public double findMaxFlow() {
       return 0;
+   }
+   
+   private boolean establishNextFlowPath() {
+      
+   }
+   
+   private double getLimitingFlowOnResPath() {
+      
+   }
+   
+   private boolean adjustPathByCost(double cost) {
+      
+   }
+   
+   private double getCostOfResEdge(FHflowVertex<E> src, FHflowVertex<E> dst) {
+      
+   }
+   
+   private boolean addCostToResEdge(FHflowVertex<E> src, 
+      FHflowVertex<E> dst, double cost) {
+      
+   }
+   
+   private boolean addCostToFlowEdge(FHflowVertex<E> src, 
+      FHflowVertex<E> dst, double cost) {
+      
    }
    
    /**
