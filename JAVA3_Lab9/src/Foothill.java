@@ -10,7 +10,7 @@ public class Foothill
       double finalFlow;
 
       // build graph
-      MyFHflowGraph<String> myG = new MyFHflowGraph<String>();
+      FHflowGraph<String> myG = new FHflowGraph<String>();
 
       myG.addEdge("s","a", 3);    myG.addEdge("s","b", 2); 
       myG.addEdge("a","b", 1);    myG.addEdge("a","c", 3); 
