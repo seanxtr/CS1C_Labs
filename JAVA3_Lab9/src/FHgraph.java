@@ -1,4 +1,4 @@
-package cs_1c;
+
 import java.util.*;
 
 // --- assumes definition of simple class Pair<E, F> in cis27a

@@ -1,4 +1,4 @@
-package cs_1c;
+
 
 //--- a simple pair data structure, (first, second), that uses first as a key
 public class Pair<E, F>
