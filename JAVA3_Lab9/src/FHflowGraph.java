@@ -261,6 +261,8 @@ public class FHflowGraph<E>
     * @return         max flow
     */
    public double findMaxFlow() {
+      while (establishNextFlowPath()) 
+         getLimitingFlowOnResPath();
       return 0;
    }
    
