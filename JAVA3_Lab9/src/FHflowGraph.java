@@ -150,7 +150,56 @@ public class FHflowGraph<E>
       vertexSet = new HashSet< FHflowVertex<E> >();
    }
    
+   /**
+    * Setter for start vertex
+    * @param start       data value
+    * @return            true if the value exists
+    */
+   public boolean setStartVert(E start) {
+      startVert = getVertexWithThisData(start);
+      return startVert != null;
+   }
    
+   /**
+    * Setter for end vertex
+    * @param start       data value
+    * @return            true if the value exists
+    */
+   public boolean setEndVert(E end) {
+      endVert = getVertexWithThisData(end);
+      return endVert != null;
+   }
+   
+   /**
+    * Method to output Residual graph for inspection
+    */
+   public void showResAdjTable() {
+      Iterator<FHflowVertex<E>> iter;
+
+      System.out.println( "------------------------ ");
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+         (iter.next()).showResAdjList();
+      System.out.println();
+   }
+   
+   /**
+    * Method to output flow graph for inspection
+    */
+   public void showFlowAdjTable() {
+      Iterator<FHflowVertex<E>> iter;
+
+      System.out.println( "------------------------ ");
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+         (iter.next()).showFlowAdjList();
+      System.out.println();
+   }
+   
+   /**
+    * Method to add edge to the graph
+    * @param source       start value
+    * @param dest         end value
+    * @param cost         cost value of the edge
+    */
    public void addEdge(E source, E dest, double cost)
    {
       FHflowVertex<E> src, dst;
@@ -159,13 +208,12 @@ public class FHflowGraph<E>
       src = addToVertexSet(source);
       dst = addToVertexSet(dest);
 
-      // add dest to source's adjacency list
-      src.addToAdjList(dst, cost);
-   }
-   
-   public void addEdge(E source, E dest, int cost)
-   {
-      addEdge(source, dest, (double)cost);
+      // add forward and backward edge to residual graph
+      src.addToResAdjList(dst, cost);
+      dst.addToResAdjList(src, 0);
+      
+      // add forward edge to flow graph
+      src.addToFlowAdjList(dst, cost);
    }
    
    /**
@@ -208,22 +256,10 @@ public class FHflowGraph<E>
       return null;   // should never happen
    }
    
-   
-   public void showAdjTable()
-   {
-      Iterator< FHvertex<E> > iter;
-
-      System.out.println( "------------------------ ");
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
-         (iter.next()).showAdjList();
-      System.out.println();
+   public double findMaxFlow() {
+      return 0;
    }
    
-   public HashSet< FHvertex<E> > getVertSet() 
-   { 
-      return (HashSet< FHvertex<E> > )vertexSet.clone(); 
-   }
-
    /**
     * Method to remove all vertexes
     */
@@ -232,122 +268,6 @@ public class FHflowGraph<E>
       vertexSet.clear();
    }
    
-   public void setGraph( ArrayList< FHedge<E> > edges )
-   {
-      int k, numEdges;
-      numEdges = edges.size();
-
-      clear();
-      for (k = 0; k < numEdges; k++)
-         addEdge( edges.get(k).source.data,  
-            edges.get(k).dest.data,  edges.get(k).cost);
-   }
-
-   // algorithms
-   public boolean dijkstra(E x)
-   {
-      FHvertex<E> w, s, v;
-      Pair<FHvertex<E>, Double> edge;
-      Iterator< FHvertex<E> > iter;
-      Iterator< Pair<FHvertex<E>, Double> > edgeIter;
-      Double costVW;
-      Deque< FHvertex<E> > partiallyProcessedVerts
-       = new LinkedList< FHvertex<E> >();
-
-      s = getVertexWithThisData(x);
-      if (s == null)
-         return false;
-
-      // initialize the vertex list and place the starting vert in p_p_v queue
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
-         iter.next().dist = FHvertex.INFINITY;
-      
-      s.dist = 0;
-      partiallyProcessedVerts.addLast(s);
-
-      // outer dijkstra loop
-      while( !partiallyProcessedVerts.isEmpty() )
-      {
-         v = partiallyProcessedVerts.removeFirst(); 
-         
-         // inner dijkstra loop: for each vert adj to v, lower its dist 
-         // to s if you can
-         for (edgeIter = v.adjList.iterator(); edgeIter.hasNext(); )
-         {
-            edge = edgeIter.next();
-            w = edge.first;
-            costVW = edge.second;
-            if ( v.dist + costVW < w.dist )
-            {
-               w.dist = v.dist + costVW;
-               w.nextInPath = v; 
-               
-               // w now has improved distance, so add w to PPV queue
-               partiallyProcessedVerts.addLast(w); 
-            }
-         }
-       }
-      return true;
-   }
-   
-   // applies dijkstra, print path - could skip dijkstra()
-   public boolean showShortestPath(E x1, E x2)
-   {
-      FHvertex<E> start, stop, vert;
-      Stack< FHvertex<E> > pathStack = new Stack< FHvertex<E> >();
-
-      start = getVertexWithThisData(x1);
-      stop = getVertexWithThisData(x2);
-      if (start == null || stop == null)
-         return false;
-
-      // perhaps add argument opting to skip if pre-computed
-      dijkstra(x1);
-      
-      if (stop.dist == FHvertex.INFINITY)
-      {
-         System.out.println("No path exists.");
-         return false;
-      }
-
-      for (vert = stop; vert != start; vert = vert.nextInPath)
-         pathStack.push(vert);
-      pathStack.push(vert);
-
-      System.out.println( "Cost of shortest path from " + x1 
-            + " to " + x2 + ": " + stop.dist );
-      while (true)
-      {
-         vert = pathStack.pop();
-         if ( pathStack.empty() )
-         {
-            System.out.println( vert.data );
-            break;
-         }
-         System.out.print( vert.data + " -> ");
-      }
-      return true;
-   }
-
-   // applies dijkstra, prints distances - could skip dijkstra()
-   public boolean showDistancesTo(E x)
-   {
-      
-      Iterator< FHvertex<E> > iter;
-      FHvertex<E> vert;
-
-      if (!dijkstra(x))
-         return false;
- 
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
-      {
-         vert = iter.next();
-         System.out.println( vert.data + " " + vert.dist); 
-      }
-      System.out.println();
-      return true;
-   }
-
    /**
     * Method to find vertex with given data value
     * @param x           data value
