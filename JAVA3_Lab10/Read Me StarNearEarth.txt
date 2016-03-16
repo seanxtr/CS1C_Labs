@@ -1,0 +1,30 @@
+Instructions for using the source and data files for StarNearEarth project.
+
+These instructions will get you started so that you can have a convenient
+method of reading in several StarNearEarth objects ready to use in your
+various data structures and algorithms programs.  Once you have the base 
+program working, you will not have to repeat these steps - you can reuse
+the same program source for all your experiments.
+
+1. If you have not already done so, download the cs_1c package classes and 
+   install them into a cs_1c package within your project (as directed by the 
+   course web site).
+
+2. Replace the contents of your main Foothill.java file with the sample program
+   in Foothill_StarNearEarth.java via copy-paste.  (CAUTION: If 
+   Foothill_StarNearEarth.java opens up in your IDE environment, don't make 
+   the mistake of believing it is part of your project.  It is not - you 
+   must copy its contents and paste into your actual main .java file, which 
+   I usually call Foothill.java.)
+
+3. Copy the data file nearest_stars.txt into your main project folder.  This is
+   higher up than the src folder and is going to be somewhere like:
+
+      your-user-folder/workspace/Foothill. 
+   
+
+4. Save, Compile (build) and Run your program.
+
+5. For Eclipse on a Mac, you may have to open nearest_stars.txt from the IDE and
+   select File -> Convert Line Delimiters To -> Unix [default] before running
+   the program.  This only needs to be done once.
